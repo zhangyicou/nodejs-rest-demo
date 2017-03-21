@@ -1,0 +1,269 @@
+# Build with docker executor to run gitlab-runner
+# keep wangshaofeng 5
+image: reg.ibd.lan/keep/node-os:latest
+stages:
+  - build
+  - review
+  - image
+  - deploy
+  - test
+  - merge
+variables:
+  APP_NAME: ibd-backend-demo
+  REGISTRY_HOST: reg.ibd.lan
+  PROJECT_GROUP: keep
+  APP_IMAGE: $REGISTRY_HOST/$PROJECT_GROUP/$APP_NAME
+  PRODUCTION_SERVICE_NAME: ibd-backend-demo
+  STAGING_SERVICE_NAME: ibd-backend-demo
+  CLOUD_REG_HOST: registry.cn-hangzhou.aliyuncs.com
+  CLOUD_REG_USERNAME: shengjingibd
+  CLOUD_REG_PASSWORD: ibdGY123
+  CLOUD_OUT_APP_IMAGE: $CLOUD_REG_HOST/ibd/$PRODUCTION_SERVICE_NAME:latest
+  CLOUD_APP_IMAGE: registry-internal.cn-hangzhou.aliyuncs.com/ibd/$PRODUCTION_SERVICE_NAME
+  CLOUD_OUT_APP_IMAGE_VERSION: $CLOUD_REG_HOST/ibd/$PRODUCTION_SERVICE_NAME
+  CLOUD_APP_IMAGE_VERSION: registry-internal.cn-hangzhou.aliyuncs.com/ibd/$PRODUCTION_SERVICE_NAME
+  APP_SH: ps.sh
+  APP_UP_SH: up-ps.sh
+#  RUNNER_TAG: n60s5t24
+
+cache:
+  paths:
+    - node_modules/
+before_script:
+  - docker info
+
+build:
+  stage: build
+  script:
+    - docker -v
+    - echo $CI_BUILD_REF
+    - echo $CI_BUILD_REF_NAME
+    - export NPM_CONFIG_LOGLEVEL=error
+    - npm cache clean
+    - rm -rf  app dist
+    - npm install -s
+    - npm run compile
+  artifacts:
+    paths:
+      - app/
+#    expire_in: 1 hour
+  when: manual
+#  except:
+#    - tags
+  tags:
+    - n60s5t24
+
+review:
+  stage: review
+  before_script: []
+  script:
+    - echo "Review for unit testing "
+#    - npm run test
+  dependencies:
+    - build
+  when: manual
+  except:
+    - master
+  tags:
+    - n60s5t24
+
+review_1:
+  stage: review
+  before_script: []
+  script:
+    - echo "Review for p2p  ntesting "
+  dependencies:
+    - build
+  when: manual
+  except:
+    - master
+  tags:
+    - n60s5t24
+
+.reg_private: &reg_private
+  - echo "192.168.93.59  reg.ibd.lan" >> /etc/hosts
+  - docker login -u  wangsf -p Horbor123456  -e wangsf@shengjing360.com  $REGISTRY_HOST
+
+
+.cloud_reg_private: &cloud_reg_private
+  - docker login --username=$CLOUD_REG_USERNAME --password=$CLOUD_REG_PASSWORD  -e wangsf@shengjing360.com  $CLOUD_REG_HOST
+
+image-by-name:
+  stage: image
+  before_script: *reg_private
+  script:
+    - docker build -q -t $APP_IMAGE:$CI_BUILD_REF  .
+#    - docker build --pull -t $APP_IMAGE:$CI_BUILD_REF .
+    - docker tag $APP_IMAGE:$CI_BUILD_REF $APP_IMAGE:$CI_BUILD_REF_NAME
+    - docker push $APP_IMAGE:$CI_BUILD_REF
+    - docker push $APP_IMAGE:$CI_BUILD_REF_NAME
+    - docker images | grep $PRODUCTION_SERVICE_NAME
+  dependencies:
+    - build
+  when: manual
+  except:
+    - master
+  tags:
+    - n60s5t24
+
+# Master will be released with :latest as the tag
+image-master:
+  stage: image
+  before_script: *reg_private
+  dependencies:
+    - build
+  script:
+    - docker build -q -t $APP_IMAGE:$CI_BUILD_REF  .
+#    - docker build --pull -t $APP_IMAGE:$CI_BUILD_REF .
+    - docker tag $APP_IMAGE:$CI_BUILD_REF $APP_IMAGE:latest
+    - docker push $APP_IMAGE:$CI_BUILD_REF
+    - docker push $APP_IMAGE:latest
+    - docker images | grep $PRODUCTION_SERVICE_NAME
+  when: manual
+  only:
+    - master
+  tags:
+    - n60s5t24
+
+image-cloud:
+  stage: image
+  before_script: *cloud_reg_private
+  dependencies:
+    - build
+  script:
+    - docker build -q -t $APP_IMAGE:$CI_BUILD_REF  .
+#    - docker build --pull -t $APP_IMAGE:$CI_BUILD_REF .
+    - docker tag $APP_IMAGE:$CI_BUILD_REF $CLOUD_OUT_APP_IMAGE
+    - docker push $CLOUD_OUT_APP_IMAGE
+    - docker tag $APP_IMAGE:$CI_BUILD_REF $CLOUD_OUT_APP_IMAGE_VERSION:$CI_BUILD_REF
+    - docker push $CLOUD_OUT_APP_IMAGE_VERSION:$CI_BUILD_REF
+#  when: manual
+  only:
+    - master
+  tags:
+    - n60s5t24
+
+.prod_deploy: &prod_deploy
+  stage: deploy
+  environment: production
+  before_script: *reg_private
+  script:
+# The following line command only run once in your initializtion deployment in K8s enviroments.
+#    - kubectl create -f ./k8s/k8s-init.yaml
+#    - kubectl patch deployment $PRODUCTION_SERVICE_NAME --namespace=demo -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$PRODUCTION_SERVICE_NAME"'","image":"'"$APP_IMAGE:$CI_BUILD_REF"'"}]}}}}'
+    - chmod a+x /opt/kube/prod/$APP_SH
+    - /opt/kube/prod/$APP_SH
+  tags:
+    - n60s5t24
+
+.staging_deploy: &staging_deploy
+  stage: deploy
+  environment: staging
+  before_script: *reg_private
+  script:
+# The following line command only run once in your initializtion deployment in K8s enviroments.
+#    - kubectl create -f ./k8s/k8s-init.yaml
+    - kubectl patch deployment/$STAGING_SERVICE_NAME --namespace=ibd -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$STAGING_SERVICE_NAME"'","image":"'"$APP_IMAGE:$CI_BUILD_REF"'"}]}}}}' --kubeconfig /opt/kube/k8s/kubelet.conf
+    - echo $APP_IMAGE:$CI_BUILD_REF
+#    - chmod a+x /opt/kube/test/$APP_SH
+#    - /opt/kube/test/$APP_SH
+#auto-deploy-master:
+#  <<: *staging_deploy
+#  only:
+#    - master
+  tags:
+    - n60s5t24
+
+
+.cloud_prod_deploy: &cloud_prod_deploy
+  stage: deploy
+  environment: production
+  before_script: *cloud_reg_private
+  script:
+# The following line command only run once in your initializtion deployment in K8s enviroments.
+#    - kubectl create -f ./k8s/cloud-k8s-init.yaml --kubeconfig /opt/kube/ali/kubelet.conf
+#    - kubectl patch deployment $PRODUCTION_SERVICE_NAME --namespace=demo -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$PRODUCTION_SERVICE_NAME"'","image":"'"$APP_IMAGE:$CI_BUILD_REF"'"}]}}}}'
+    - chmod a+x /opt/kube/cloud/$APP_SH
+    - /opt/kube/cloud/$APP_SH
+  tags:
+    - n60s5t24
+
+.cloud_up: &cloud_up
+  stage: deploy
+  environment: production
+  before_script: *cloud_reg_private
+  script:
+# The following line command only run once in your initializtion deployment in K8s enviroments.
+#    - kubectl create -f ./k8s/cloud-k8s-init.yaml --kubeconfig /opt/kube/ali/kubelet.conf
+#    - kubectl patch deployment $PRODUCTION_SERVICE_NAME --namespace=demo -p '{"spec":{"template":{"spec":{"containers":[{"name":"'"$PRODUCTION_SERVICE_NAME"'","image":"'"$APP_IMAGE:$CI_BUILD_REF"'"}]}}}}'
+    - chmod a+x /opt/kube/cloud/$APP_UP_SH
+    - /opt/kube/cloud/$APP_UP_SH
+  tags:
+    - n60s5t24
+
+auto-deploy-tags:
+  <<: *prod_deploy
+  when: manual
+  only:
+    - tags
+  tags:
+    - n60s5t24
+
+deploy2staging(dev):
+  <<: *staging_deploy
+  when: manual
+  except:
+    - master
+    - tags
+  tags:
+    - n60s5t24
+
+deploy2production:
+  <<: *prod_deploy
+  when: manual
+  only:
+    - master
+  tags:
+    - n60s5t24
+
+deploy2cloud:
+  <<: *cloud_prod_deploy
+  when: manual
+  only:
+    - master
+  tags:
+    - n60s5t24
+
+up2cloud:
+  <<: *cloud_up
+  when: manual
+  only:
+    - master
+  tags:
+    - n60s5t24
+
+test-by-name(dev):
+  stage: test
+  before_script: []
+  dependencies:
+    - image-by-name
+  script:
+    - echo "for Integration Testing"
+#    - curl -sSL http://localhost:80
+  when: manual
+  except:
+    - master
+  tags:
+    - n60s5t24
+
+merge-master:
+  stage: merge
+  before_script: []
+  script:
+    - echo "Merge source code master"
+#   - git merge
+  when: manual
+  except:
+    - master
+  tags:
+    - n60s5t24

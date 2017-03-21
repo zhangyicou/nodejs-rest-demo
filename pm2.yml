@@ -1,0 +1,14 @@
+apps:
+  - script: bin/production.js
+    name: 'ibd-demo'
+    exec_mode: cluster
+    instances: 0
+    max_memory_restart: 2G
+    autorestart: true
+    ignore_watch:
+      - .idea
+      - node_modules
+    env:
+      NODE_ENV: production
+    env_dev:
+      NODE_ENV: development
