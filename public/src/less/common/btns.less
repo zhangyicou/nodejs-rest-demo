@@ -1,0 +1,83 @@
+@import "variables";
+.btn-box{
+  width:100%;
+}
+.btn {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: 400;
+  text-align: center;
+  text-decoration: none;
+  touch-action: manipulation;
+  cursor: pointer;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  font-size: @fs5;
+  height:38px;
+  line-height: 38px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  padding:0;
+  width:100%;
+  border-radius:5px;
+  font-weight:bold;
+  &+.btn{
+    margin:0 0.25rem;
+  }
+
+  &.btn-default {
+	  color: @btn-default-color;
+	  background-color: @btn-default-bg;
+	  border-color: @btn-default-border;
+  }
+  &.btn-primary {
+	  color: @btn-primary-color;
+	  background-color: @btn-primary-bg;
+	  border-color: @btn-primary-border;
+    &:active {
+      background-color: @dc;
+    }
+    &[disabled] {
+        color: @btn-disabled-color;
+        background-color: @btn-disabled-bg;
+        border-color: @btn-disabled-border;
+         &:active {
+          background-color: @btn-disabled-bg;
+        }
+    }
+  }
+  &.btn-green {
+    color: @dc-p;
+    background-color: @bg-1;
+    border-color: @dc-p;
+    &:active {
+      background-color: @dc-p;
+    }
+    &[disabled] {
+      color: @btn-disabled-color;
+      background-color: @btn-disabled-bg;
+      border-color: @btn-disabled-border;
+      &:active {
+        background-color: @btn-disabled-bg;
+      }
+    }
+  }
+  &.btn-animate{
+    -webkit-transition:all 1s;
+    -moz-transition:all 1s;
+    -ms-transition:all 1s;
+    -o-transition:all 1s;
+    transition:all 1s;
+  }
+  
+  &.btn-block {
+      display: block;
+      margin:60px auto 0;
+  }
+
+  &.btn-block+.btn-block {
+      margin-top: 20px;
+  }
+}

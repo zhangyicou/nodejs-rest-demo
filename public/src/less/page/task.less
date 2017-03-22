@@ -1,0 +1,75 @@
+@import "../common/base";
+@import "module/task-item";
+header{
+  background-color:#fff;
+  height:45px;
+  margin-bottom:10px;
+  display:box;
+  display:-webkit-box;
+  display:-moz-box;
+  display:-ms-flexbox;
+  display:-webkit-flex;
+  display:flex;
+  border-bottom:1px solid @div;
+  position:relative;
+  z-index:10000;
+  .select-box{
+    -webkit-box-flex:1;
+    -moz-box-flex:1;
+    -webkit-flex:1;
+    -ms-flex:1;
+    flex:1;
+    box-sizing:border-box;
+    background-image:url('/img/sprite.png');
+    background-size:79px 150px;
+    background-repeat:no-repeat;
+    background-position:right -62px;
+    &.expand{
+      background-position:right -35px;
+    }
+    &:nth-child(1){
+      border-right:1px solid @div;
+    }
+    .cur-txt{
+      line-height:44px;
+      padding-left:20px;
+    }
+  }
+  .sub{
+    ul{
+      display:none;
+      position:absolute;
+      top:46px;
+      left:0;
+      z-index:100;
+      background-color:#fff;
+      width:100%;
+      font-size:15px;
+      li{
+        height:44px;
+        line-height:44px;
+        border-bottom:1px solid @div;
+        padding:0 15px;
+        &:hover,&:active{
+          background-color:@bg-2;
+        }
+      }
+    }
+  }
+}
+.no-result{
+  background:url('/img/noresult.png') no-repeat 0 0;
+  background-size:100%;
+  width:140px;
+  height:79px;
+  margin:75px auto 0;
+}
+.loading{
+  top:60px;
+  img{
+    top:3px;
+  }
+}
+
+
+

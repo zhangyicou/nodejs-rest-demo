@@ -1,0 +1,36 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "/dist/html/test-page/index.html",
+  "scripts": {
+    "build-js": "node r.js -o build.js",
+    "gulp-js": "./node_modules/gulp/bin/gulp.js",
+    "build": "cat config_product.js > config.js && npm install --registry=https://registry.cnpmjs.org && npm run build-js && npm run gulp-js"
+  },
+  "directories": {
+    "doc": "doc"
+  },
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-less": "^3.1.0",
+    "gulp-rename": "^1.2.2"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-clean-css": "^3.0.3",
+    "gulp-concat": "^2.6.0",
+    "gulp-less": "^3.1.0",
+    "gulp-rev": "^7.1.2",
+    "gulp-rev-collector": "^1.0.5",
+    "gulp-uglify": "^2.0.0",
+    "run-sequence": "^1.2.2"
+  },
+  "repository": {
+    "type": "gitlab",
+    "url": "http://192.168.93.5/web/ibd-web-demo.git"
+  },
+  "author": "",
+  "license": "ISC"
+}

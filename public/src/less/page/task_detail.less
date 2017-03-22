@@ -1,0 +1,396 @@
+@import "../common/base";
+//.summary{
+//  background:#fff;
+//  padding:15px 15px 10px;
+//  position:relative;
+//  h2{
+//    font-size:16px;
+//  }
+//  .info{
+//    color:#666;
+//    margin:10px 0 12px;
+//    .icon{
+//      background-image:url('/img/sprite.png');
+//      background-repeat:no-repeat;
+//      background-size:79px 150px;
+//      display:inline-block;
+//      width:12px;
+//      height:12px;
+//      vertical-align:middle;
+//      margin:0 5px 0 0;
+//    }
+//    .yes{
+//      background-position:-55px -108px;
+//    }
+//    .no{
+//      background-position:-67px -108px;
+//    }
+//  }
+//  .info1{
+//    color:@f6;
+//    line-height:20px;
+//  }
+//  .status{
+//    color:@f7;
+//    font-size:15px;
+//    position:absolute;
+//    bottom:10px;
+//    right:15px;
+//  }
+//  .red{
+//    color:@ac;
+//  }
+//}
+//.summary1{
+//  border-top:1px solid @div;
+//  border-bottom:1px solid @div;
+//  background:#fff;
+//  padding:10px 15px;
+//  ul{
+//    display:box;
+//    display:-webkit-box;
+//    display:-moz-box;
+//    display:-ms-flexbox;
+//    display:-webkit-flex;
+//    display:flex;
+//  }
+//  li{
+//    -webkit-box-flex:1;
+//    -moz-box-flex:1;
+//    -webkit-flex:1;
+//    -ms-flex:1;
+//    flex:1;
+//    box-sizing:border-box;
+//    font-size:15px;
+//    color:#666;
+//    span{
+//      color:@f7;
+//      display:block;
+//      font-size:12px;
+//      margin-bottom:5px;
+//    }
+//  }
+//}
+//.product-list{
+//  background-color:#fafafa;
+//  .item{
+//    margin:0 0 0 15px;
+//    padding:12px 0;
+//    position:relative;
+//    background:url('/img/arrow.png') no-repeat right center;
+//    background-size:25px 17px;
+//    border-bottom:1px solid @div;
+//    &:last-child{
+//      border-bottom:0;
+//    }
+//    a{
+//      text-decoration:none;
+//      color:#666;
+//    }
+//    h2{
+//      font-size:15px;
+//      margin:0 0 6px;
+//      color:#666;
+//    }
+//    .time{
+//      color:#999;
+//    }
+//    .status{
+//      font-size:15px;
+//      position:absolute;
+//      top:12px;
+//      right:40px;
+//    }
+//    .product-num{
+//      position:absolute;
+//      top:35px;
+//      right:40px;
+//      font-size:12px;
+//      color:#666;
+//      strong{
+//        color:#41c264;
+//        font-weight:normal;
+//      }
+//      i{
+//        background:url('/img/sprite.png') no-repeat -39px -108px;
+//        background-size:79px 150px;
+//        display:inline-block;
+//        width:15px;
+//        height:15px;
+//        vertical-align:middle;
+//        margin:0 5px;
+//        position:relative;
+//        top:-1px;
+//      }
+//    }
+//  }
+//}
+body{
+  font-size: 0px;
+  background-color: #eeeeee;
+}
+
+header{//头部大蓝条
+  min-height: 67px;
+  background-color: #119ceb;
+  font-size: 0;
+  display: table;
+  width: 100%;
+  padding: 15px 12px;
+  box-sizing: border-box;
+  div.ename{//企业名称
+    display: table-cell;
+    //width: 60%;
+    font-size: 18px;
+    color: #ffffff;
+    vertical-align: middle;
+    //padding-left: 12px;
+    .taskid{
+      font-size: 15px;
+      margin-top: 4px;
+    }
+  }
+  div.right{
+    //width: 25%;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+    .status{//状态
+      text-align: right;
+      font-size: 15px;
+      color: #ffffff;
+    }
+    .info{//延迟信息
+      display: inline-block;
+      font-size: 15px;
+      color: white;
+      background-color: #fa6950;
+      //height: 16px;
+      border-radius: 10px;
+      padding: 0 6px;
+      white-space: nowrap;
+      margin-top: 6px;
+    }
+  }
+}
+//生产车间
+.workshop{
+  margin-top: 10px;
+  & > .head{
+    padding-left: 12px;
+    height: 30px;
+    background-color: #ecf7fd;
+    box-shadow: 0 2.5px 5px 0px rgba(0, 0, 0, 0.2);
+    .bar{//小竖棒
+      display: inline-block;
+      vertical-align: middle;
+      width: 5px;
+      height: 14px;
+      background-color: #119ceb;
+      border-radius: 2.5px;
+      margin-right: 5px;
+    }
+    .ws-name{
+      font-size: 15px;
+      line-height: 30px;
+      vertical-align: middle;
+      color: #119ceb;
+    }
+  }
+  //每一产品块
+  .item{
+    background-color: #ffffff;
+    overflow: hidden;
+    margin-bottom: 5px;
+    .title{//标题栏
+      padding: 15px 12px 8px;
+      .order{//序号
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        color: #ffffff;
+        font-size: 12px;
+        background-color: #577485;
+        border-radius: 4px;
+        text-align: center;
+        margin-right: 6px;
+        vertical-align: top;
+        position: relative;
+        top: 3px;
+      }
+      .job-name{//名称
+        font-size: 15px;
+        color: #333333;
+        //line-height: 60px;
+        vertical-align: top;
+        display: inline-block;
+        //white-space: nowrap;
+        //overflow: hidden;
+        //text-overflow:ellipsis;
+        width: 65%;
+        word-break: break-word;
+      }
+      span.status{//状态
+        font-size: 15px;
+        float: right;
+        &.done{
+          color: #41c264;
+        }
+        &.producing{
+          color: #119ceb;
+        }
+        &.pause{
+          color: #f46950;
+        }
+        &.no{
+          color:#577485;
+        }
+      }
+    }
+    //完成/计划
+    .num{
+      margin: 0 12px;
+      border: 1px solid #dddddd;
+      height: 60px;
+      box-sizing: border-box;
+      padding: 7.5px 0;
+      & > div{
+        box-sizing: border-box;
+        display: inline-block;
+        text-align: center;
+        width: 50%;
+        border-right: 1px solid #dddddd;
+        & + div{
+          border-right: none;
+        }
+      }
+      .left{
+        display: inline-block;
+        height: 45px;
+        //width: 50%;
+        box-sizing: border-box;
+        text-align: left;
+        //padding-left: 30px;
+        .line1{
+          font-size: 15px;
+          color: #577485;
+        }
+        .line2{
+          color: #000000;
+          display: inline-block;
+          margin-top: 5px;
+          span{
+            color: #000000;
+            font-size: 18px;
+            &.done{
+              color: #41c264;
+            }
+          }
+        }
+      }
+      .right{
+        .left;
+        border-right: none;
+      }
+    }
+    //日期
+    .date{
+      margin: 10px 12px 18px;
+      //padding-bottom: 18px;
+      border: 1px solid #dddddd;
+      position: relative;
+      .head{
+        height: 25px;
+        border-bottom: 1px dashed #dddddd;
+        position: relative;
+        span{
+          font-size: 15px;
+          color: #577485;
+          line-height: 25px;
+          display: inline-block;
+          //width: 50%;
+          text-align: center;
+          &.plan{
+            position: absolute;
+            left: 60px;
+          }
+          &.real{
+            position: absolute;
+            right: 90px;
+          }
+        }
+      }
+      .body{
+        padding: 7px 10px;
+        .begin{
+          position: relative;
+          height: 20px;
+          .first{
+            display: inline-block;
+            margin-right: 20px;
+            font-size: 15px;
+            color: #577485;
+            line-height: 20px;
+            vertical-align: middle;
+            //position: absolute;
+          }
+          .plan{
+            font-size: 15px;
+            color: #333333;
+            line-height: 20px;
+            vertical-align: middle;
+            //position: absolute;
+          }
+          .real{
+            font-size: 15px;
+            color: #333333;
+            line-height: 20px;
+            float: right;
+            //position: absolute;
+            //right: 0;
+          }
+        }
+        .end{
+          .begin;
+          margin-top: 7px;
+        }
+      }
+      .dumbbell{
+        width: 1px;
+        height: 30px;
+        position: absolute;
+        border-left: 1px solid #577485;
+        top: 41px;
+        left: 48px;
+        .circle{
+          width: 5px;
+          height: 5px;
+          border-radius: 2.5px;
+          background-color: #577485;
+          position: absolute;
+          left: -3px;
+        }
+        .circle + .circle{
+          margin-top: 25px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .date{
+    .head .plan{
+      left: 50px !important;
+    }
+    .body .first{
+      margin-right: 10px !important;
+    }
+    .dumbbell{
+      display: none;
+    }
+  }
+}
+
+	
+

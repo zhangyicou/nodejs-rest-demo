@@ -1,0 +1,136 @@
+@import "../../common/base";
+@import "animate";
+//任务小块样式请复制以下全部css规则
+.item{
+  background-color: white;
+  font-size: 0;
+  padding: 0;
+  border-bottom:10px solid #eee;
+  a,a:hover,a:visited{
+    text-decoration:none;
+    color:#ddd;
+  }
+  //1.头部——企业名称+延误x天
+  .head{
+    //border-bottom: 1px solid #dddddd;
+    padding: 0 12px;
+    height: 50px;
+    overflow:hidden;
+    span.ename{//企业名称
+      display: inline-block;
+      font-size: 16px;
+      color: #333333;
+      line-height: 60px;
+      max-width: 66%;//实验所得百分数
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow:ellipsis;
+      font-weight: bold;
+    }
+    span.info{//延误信息
+      font-size: 15px;
+      color: white;
+      background-color: #fa6950;
+      //height: 16px;
+      border-radius: 10px;
+      float: right;
+      padding: 0 6px;
+      margin-top: 20px;
+    }
+  }
+  //2.中部——列表（任务？）
+  .body{
+    padding-left: 12px;
+    //border-bottom: 1px solid #dddddd;
+    //border-top: 1px solid #dddddd;
+    .job{
+      height: 60px;
+      padding-right: 12px;
+      .order{//序号
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        color: #ffffff;
+        font-size: 12px;
+        background-color: #577485;
+        border-radius: 4px;
+        text-align: center;
+        margin-right: 6px;
+        vertical-align: middle;
+      }
+      .job-name{//名称
+        font-size: 15px;
+        color: #333333;
+        line-height: 60px;
+        vertical-align: middle;
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        width: 60%;
+      }
+      .progress{//进度：数字+图形bar
+        float: right;
+        margin-top: 15px;
+        .num-part{//数字
+          font-size: 15px;
+          text-align: right;
+          color:#333;
+          .done{//完成的数字
+            display: inline-block;
+            color: #41c264;
+            //transition: color 0.5s;
+            //&.up{//数字增加时
+            //  animation: highlight 2s;
+            //}
+          }
+          margin-bottom: 8px;
+        }
+        .bar-back{//图形
+          background-color: #eeeeee;
+          width: 85px;
+          height: 4px;
+          border-radius: 2px;
+          .bar-face{
+            width: 0;
+            height: 100%;
+            background-color: #41c264;
+            border-radius: 2px;
+          }
+        }
+      }
+    }
+    .job + .job{
+      border-top: 1px dashed #dddddd;
+    }
+  }
+  //3.尾部——交货时间+状态
+  .foot{
+    padding: 0 12px;
+    height: 50px;
+    position: relative;
+    line-height: 50px;
+    span.delivery-date{//交货时间
+      font-size: 16px;
+      color: #777777;
+    }
+    span.status{//状态
+      font-size: 16px;
+      color: #333333;
+      float: right;
+    }
+  }
+}
+//动画
+//进度数字变化时变亮
+@keyframes highlight{
+  0%{
+    color: #41c264;
+  }
+  50%{
+    color: greenyellow;
+  }
+  100%{
+    color: #41c264;
+  }
+}
